@@ -21,9 +21,11 @@ public class Search extends HttpServlet
 
     private Statement stmt;
     private static final String key_col = "public_key";
-    private static final String sql_f = String.format(
-            "SELECT %s FROM public_keys WHERE id='%%s' AND cd_key='%%s' AND verified=0", key_col
+    private static final String sql_qf = String.format(
+            "SELECT %s FROM public_keys WHERE cd_key='%%s' AND md5_info='%%s' AND verified=0", key_col
     );
+    private static final String sql_df =
+            "UPDATE public_keys SET verified=1 WHERE cd_key='%s' AND md5_info='%s'";
 
     public void init() throws ServletException
     {
@@ -49,27 +51,29 @@ public class Search extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        String id = request.getParameter("id");
         String cd_key = request.getParameter("cdk");
-        if (cd_key == null || id == null)
+        String md5_info = request.getParameter("info");
+
+        if (cd_key == null || md5_info == null)
         {
-            response.getWriter().print("Please input id and cd-key.");
+            response.getWriter().print("Please input cd-key and info.");
             return;
         }
         try
         {
-            ResultSet rs = stmt.executeQuery(String.format(sql_f, id, cd_key));
-            if(!rs.next())
+            ResultSet rs = stmt.executeQuery(String.format(sql_qf, cd_key, md5_info));
+            if (!rs.next())
             {
                 response.getWriter().print("This cd-key is not exist or has been verified.");
                 return;
             }
             String public_key = rs.getString(key_col);
             response.getWriter().print(public_key);
+            stmt.execute(String.format(sql_df, cd_key, md5_info));
         }
         catch (SQLException ex)
         {
-            System.out.println(String.format(sql_f, id, cd_key));
+            System.out.println(String.format(sql_df, cd_key, md5_info));
             System.out.println("Query failed");
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
