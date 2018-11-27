@@ -1,6 +1,7 @@
 package iQRGenuine.generate;
 
 import java.io.IOException;
+import javax.crypto.KeyGenerator;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import iQRGenuine.util.RSATool;
 
 import iQRGenuine.util.DataConnection;
 
@@ -23,12 +25,13 @@ public class Generate extends HttpServlet
         try
         {
             stmt= DataConnection.initConn();
+
         }
         catch (Exception ex)
         {
             // handle any errors
             System.out.println("init() failed");
-            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("Exception: " + ex.getMessage());
         }
     }
 
