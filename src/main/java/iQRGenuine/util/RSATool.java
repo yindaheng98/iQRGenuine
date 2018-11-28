@@ -52,7 +52,7 @@ public class RSATool
      *
      * @return 包含打包成byte[]形式的私钥和公钥的object[], 其中，object[0]为私钥byte[],object[1]为公钥byte[]
      */
-    public static byte[][] giveRSAKeyPairInByte()
+    public static byte[][] getKeyPairBytes()
     {
         KeyPair newKeyPair = _keyPairGenerator.generateKeyPair();
         byte[] b_prv = newKeyPair.getPrivate().getEncoded();
@@ -70,7 +70,7 @@ public class RSATool
      * @param privKeyInByte 密钥
      * @return 加密数据
      */
-    public static byte[] encryptByRSA1(byte[] privKeyInByte, byte[] plain_text) throws Exception
+    public static byte[] encrypt(byte[] privKeyInByte, byte[] plain_text) throws Exception
     {
         PKCS8EncodedKeySpec priv_spec = new PKCS8EncodedKeySpec(privKeyInByte);
         PrivateKey privKey = _keyFactory.generatePrivate(priv_spec);
@@ -86,7 +86,7 @@ public class RSATool
      * @param pubKeyInByte 公钥
      * @return 解密数据
      */
-    public static byte[] decryptByRSA1(byte[] pubKeyInByte, byte[] cipher_text) throws Exception
+    public static byte[] decrypt(byte[] pubKeyInByte, byte[] cipher_text) throws Exception
     {
         X509EncodedKeySpec pub_spec = new X509EncodedKeySpec(pubKeyInByte);
         PublicKey pubKey = _keyFactory.generatePublic(pub_spec);

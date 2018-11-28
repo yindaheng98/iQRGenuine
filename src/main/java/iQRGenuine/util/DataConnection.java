@@ -10,7 +10,7 @@ public class DataConnection
     private static final String PASS = "tests";
 
     private static final String tablename = "public_keys";
-    private static final String colname_cd_key = "cd_key";
+    public static final String colname_cd_key = "cd_key";
     private static final String colname_md5_info = "md5_info";
     public static final String colname_public_key = "public_key";
     private static final String colname_verified = "verified";
