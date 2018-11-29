@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
@@ -24,7 +23,7 @@ public class Generate extends HttpServlet
     private static String index_info = "info";
     private static String index_cipher = "cipher";
     private static String response_f = String.format(
-            "{%s:%%s,%s:%%s,%s:%%s}",
+            "{\"%s\":\"%%s\",\"%s\":\"%%s\",\"%s\":\"%%s\"}",
             index_state,
             index_info,
             index_cipher);
