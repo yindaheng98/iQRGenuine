@@ -1,4 +1,4 @@
-package iQRGenuine.search;
+package iQRGenuine;
 
 import iQRGenuine.util.DataConnection;
 

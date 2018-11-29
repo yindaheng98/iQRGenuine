@@ -27,4 +27,11 @@ public class TestDataConnection
         String tests = DataConnection.verifyStatement("cdkttttt", "md5tttttt");
         System.out.println(tests);
     }
+
+    @Test
+    public void testloginStatement()
+    {
+        String tests = DataConnection.loginStatement("cdkttttt", "md5tttttt");
+        System.out.println(tests);
+    }
 }

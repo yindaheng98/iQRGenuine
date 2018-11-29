@@ -23,9 +23,9 @@
     <script type="text/javascript" src="js/jsqrcode/findpat.js"></script>
     <script type="text/javascript" src="js/jsqrcode/alignpat.js"></script>
     <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
-    <script type="text/javascript" src="js/scan_init.js"></script>
-    <script type="text/javascript" src="js/scan_imghandle.js"></script>
-    <script type="text/javascript" src="js/scan_dathandle.js"></script>
+    <script type="text/javascript" src="js/Scan/scan_init.js"></script>
+    <script type="text/javascript" src="js/Scan/scan_imghandle.js"></script>
+    <script type="text/javascript" src="js/Scan/scan_dathandle.js"></script>
 </head>
 
 <body onload="load()">

@@ -1,4 +1,4 @@
-package iQRGenuine.generate;
+package iQRGenuine;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
