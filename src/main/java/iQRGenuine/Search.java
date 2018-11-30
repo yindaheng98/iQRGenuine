@@ -15,6 +15,14 @@ import java.sql.SQLException;
 public class Search extends HttpServlet
 {
     private DataConnection dataConn;
+    private static String index_state = "state";
+    private static String index_info = "info";
+    private static String index_pkey = "public_key";
+    private static String response_f = String.format(
+            "{\"%s\":\"%%s\",\"%s\":\"%%s\",\"%s\":\"%%s\"}",
+            index_state,
+            index_info,
+            index_pkey);
 
     public void init() throws ServletException
     {
@@ -24,7 +32,6 @@ public class Search extends HttpServlet
         }
         catch (Exception ex)
         {
-            // handle any errors
             System.out.println("init() failed");
             System.out.println("SQLException: " + ex.getMessage());
         }
@@ -44,21 +51,30 @@ public class Search extends HttpServlet
 
         if (cd_key == null || md5_info == null)
         {
-            response.getWriter().print("Please input cd-key and info.");
+            response.getWriter().print(
+                    String.format(response_f,
+                            0,
+                            "Please input cd-key and info.",
+                            "null"));
             return;
         }
         try
         {
             String public_key = dataConn.verifyInfo(cd_key, md5_info);
-            response.getWriter().print(public_key);
+            response.getWriter().print(
+                    String.format(response_f,
+                            1,
+                            "Search success",
+                            public_key));
         }
-        catch (SQLException ex)
+        catch (SQLException e)
         {
-            response.getWriter().print("This cd-key is not exist or has been verified.");
-            System.out.println("Query failed");
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
+            response.getWriter().print(
+                    String.format(response_f,
+                            0,
+                            "This cd-key is not exist or has been verified.",
+                            "null"));
+            e.printStackTrace();
         }
     }
 }
