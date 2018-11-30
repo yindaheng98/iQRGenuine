@@ -28,7 +28,7 @@ public class RSATool
             _keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
             random.setSeed(System.currentTimeMillis());
-            _keyPairGenerator.initialize(2048, random);
+            _keyPairGenerator.initialize(1024, random);
         }
         catch (NoSuchAlgorithmException | NoSuchProviderException e)
         {
