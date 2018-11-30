@@ -1,7 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="iQRGenuine.util.DataTool" %>
 <%@ page import="iQRGenuine.util.DataConnection" %>
 <%
     String error_resp = "<script>" +
@@ -45,6 +42,7 @@
     <title>QRCodeGenerator</title>
     <script src="js/lib/md5.min.js"></script>
     <script src="js/lib/jquery-3.3.1.min.js"></script>
+    <script src="js/lib/jquery.qrcode.min.js"></script>
     <script src="js/Generator/generate_click.js"></script>
 </head>
 <body>
@@ -52,6 +50,7 @@
     <label for="info">Input a product info</label>
     <input type="text" id="info">
     <input type="button" onclick="generate_click($('#info').val())">
+    <div id="qrcode"></div>
 </form>
 </body>
 </html>
