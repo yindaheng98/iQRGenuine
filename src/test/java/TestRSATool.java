@@ -15,7 +15,7 @@ public class TestRSATool
             //生成私钥-公钥对
             byte[][] v = RSATool.getKeyPairBytes();
             //获得摘要
-            byte[] source = "hahahahahahahahahhhhhhhh".getBytes();
+            byte[] source = "okokokokokok".getBytes();
             //使用私钥对摘要进行加密 获得密文 即数字签名
             byte[] sign = RSATool.sign(v[0], source);
             //使用公钥对密文进行解密,解密后与摘要进行匹配

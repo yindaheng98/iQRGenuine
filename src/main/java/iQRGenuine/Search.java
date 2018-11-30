@@ -10,19 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
 
 @WebServlet(name = "Search", urlPatterns = {"search"}, loadOnStartup = 1)
 public class Search extends HttpServlet
 {
-    private Statement stmt;
+    private DataConnection dataConn;
 
     public void init() throws ServletException
     {
         try
         {
-            stmt = DataConnection.initConn();
+            dataConn = new DataConnection();
         }
         catch (Exception ex)
         {
@@ -51,18 +49,12 @@ public class Search extends HttpServlet
         }
         try
         {
-            ResultSet rs = stmt.executeQuery(DataConnection.selectStatement(cd_key, md5_info));
-            if (!rs.next())
-            {
-                response.getWriter().print("This cd-key is not exist or has been verified.");
-                return;
-            }
-            String public_key = rs.getString(DataConnection.colname_public_key);
+            String public_key = dataConn.verifyInfo(cd_key, md5_info);
             response.getWriter().print(public_key);
-            stmt.execute(DataConnection.verifyStatement(cd_key, md5_info));
         }
         catch (SQLException ex)
         {
+            response.getWriter().print("This cd-key is not exist or has been verified.");
             System.out.println("Query failed");
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
