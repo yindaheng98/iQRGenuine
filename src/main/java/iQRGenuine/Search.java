@@ -67,7 +67,7 @@ public class Search extends HttpServlet
                             "Search success",
                             public_key));
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
             response.getWriter().print(
                     String.format(response_f,

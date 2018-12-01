@@ -10,19 +10,29 @@ public class DataTool
     private static final String PASS = "tests";
 
     private static final String key_tablename = "public_keys";
-    private static final String colname_cd_key = "cd_key";
-    private static final String colname_md5_info = "md5_info";
-    public static final String colname_public_key = "public_key";
-    private static final String colname_verified = "verified";
+    static final String colname_cd_key = "cd_key";
+    static final String colname_md5_info = "md5_info";
+    static final String colname_public_key = "public_key";
+    static final String colname_verified = "verified";
 
     private static final String user_tablename = "user_infos";
     private static final String colname_username = "username";
     private static final String colname_md5_password = "md5_password";
 
-    public static Statement initConn() throws Exception
+    static Statement initConn() throws Exception
     {
         Class.forName("com.mysql.jdbc.Driver");
         return DriverManager.getConnection(DB_URL, USER, PASS).createStatement();
+    }
+
+    public static String initStatement(int n)
+    {
+        return String.format(
+                "SELECT * FROM %s ORDER BY %s DESC LIMIT %d",
+                key_tablename,
+                colname_cd_key,
+                n
+        );
     }
 
     public static String insertStatement(String md5_info, String public_key)

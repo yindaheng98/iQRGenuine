@@ -6,14 +6,20 @@ import iQRGenuine.util.DataTool;
 
 public class TestDataTool
 {
-        @Test
-        public void testinsertStatement()
-        {
-            String tests = DataTool.insertStatement("md5ttttt", "pktttttt");
-            System.out.println(tests);
-            assertEquals("INSERT INTO public_keys(md5_info,public_key)VALUES('md5ttttt','pktttttt')",
-                    tests);
-        }
+    @Test
+    public void testinitStatement()
+    {
+        String tests = DataTool.initStatement(50);
+        System.out.println(tests);
+    }
+
+    @Test
+    public void testinsertStatement()
+    {
+        String tests = DataTool.insertStatement("md5ttttt", "pktttttt");
+        System.out.println(tests);
+    }
+
     @Test
     public void testselectStatement()
     {
