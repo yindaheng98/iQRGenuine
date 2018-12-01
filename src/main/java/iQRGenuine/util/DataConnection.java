@@ -38,7 +38,7 @@ public class DataConnection
             if (verified == 0)//如果是未验证的产品
             {
                 String md5_info = rs.getString(DataTool.colname_md5_info);
-                String public_key=rs.getString(DataTool.colname_public_key);
+                String public_key = rs.getString(DataTool.colname_public_key);
                 jedis.set(cd_key, md5_info + " " + public_key + " " + "0");
                 //就写入全部信息
             }
@@ -98,6 +98,7 @@ public class DataConnection
 
     private String redis_verifyInfo(String cd_key, String md5_info) throws Exception
     {
+        if (!redis_avail) return null;
         if (!jedis.exists(cd_key))
             return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
         String[] infos = jedis.get(cd_key).split(" ");
