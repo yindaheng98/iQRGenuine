@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import iQRGenuine.util.DataConnection;
 import iQRGenuine.util.RSATool;
 
-
 @WebServlet(name = "Generate", urlPatterns = {"generate"}, loadOnStartup = 1)
 public class Generate extends HttpServlet
 {
