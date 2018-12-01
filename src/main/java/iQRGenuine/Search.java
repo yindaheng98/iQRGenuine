@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.sql.SQLException;
-
 @WebServlet(name = "Search", urlPatterns = {"search"}, loadOnStartup = 1)
 public class Search extends HttpServlet
 {
