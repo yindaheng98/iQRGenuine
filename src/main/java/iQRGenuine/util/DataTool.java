@@ -5,9 +5,9 @@ import java.sql.Statement;
 
 public class DataTool
 {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/tests?useUnicode=true&characterEncoding=utf8";
-    private static final String USER = "tests";
-    private static final String PASS = "tests";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/iqrgenuine?useUnicode=true&characterEncoding=utf8";
+    private static final String USER = "iqrgenuine";
+    private static final String PASS = "iqrgenuine";
 
     private static final String key_tablename = "public_keys";
     static final String colname_cd_key = "cd_key";
