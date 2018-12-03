@@ -2,15 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Generators-login</title>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <!-- 引入 FrozenUI -->
+    <link rel="stylesheet" href="http://i.gtimg.cn/vipstyle/frozenui/2.0.0/css/frozen.css"/>
+    <style>
+        body
+        {
+            background-color: #fff;
+        }
+        .ui-form
+        {
+            max-width: 375px;
+            margin:0 auto;
+        }
+    </style>
+    <title>iQRGenuine-login</title>
 </head>
 <body>
-<form action="Generator.jsp" method="post">
-    <label for="username">username</label>
-    <input type="text" name="username" id="username">
-    <label for="password">password</label>
-    <input type="password" name="password" id="password">
-    <input type="submit" value="Login">
-</form>
+<section class="ui-panel ui-panel-center ui-border-tb">
+    <h2 class="ui-arrowlink"><span>iQRGenuine二维码生成-登录</span></h2>
+</section>
+<div class="ui-form ui-border-t">
+    <form action="Generator.jsp" method="post">
+        <div class="ui-form-item ui-border-b">
+            <label>
+                用户名
+            </label>
+            <input type="text" placeholder="username" name="username">
+        </div>
+        <div class="ui-form-item ui-border-b">
+            <label>
+                密&nbsp;&nbsp;&nbsp;码
+            </label>
+            <input type="password" placeholder="password" name="password">
+        </div>
+        <div class="ui-btn-wrap">
+            <button class="ui-btn-lg ui-btn-primary"  type="submit">
+                登录
+            </button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
