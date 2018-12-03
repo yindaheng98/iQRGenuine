@@ -1,8 +1,15 @@
 <html>
 <head>
     <title>QRCODE</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="HandheldFriendly" content="true">
     <style type="text/css">
     </style>
+    <link rel="stylesheet" href="http://i.gtimg.cn/vipstyle/frozenui/2.0.0/css/frozen.css">
+    <script type="text/javascript" src="js/lib/jsencrypt.js"></script>
+	<script type="text/javascript" src="js/lib/jsencrypt.min.js"></script>
     <script type="text/javascript" src="js/lib/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/lib/md5.min.js"></script>
     <script type="text/javascript" src="js/jsqrcode/grid.js"></script>
@@ -25,10 +32,52 @@
     <script type="text/javascript" src="js/Scan/scan_init.js"></script>
     <script type="text/javascript" src="js/Scan/scan_imghandle.js"></script>
     <script type="text/javascript" src="js/Scan/scan_dathandle.js"></script>
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=37342703" charset="UTF-8"></script>
 </head>
-
+<script>
+$(document).ready(function(){
+    $("#verify").click(function () {
+        document.getElementById("btn_file").click();
+    });
+});
+</script>
 <body onload="load()">
-<input type="file" onchange="handleFiles(this.files)">
+<p class="title" style="text-align: center;font-size:50px">QR Verify</p>
+<div class="ui-dialog" id="dialog1">
+    <div class="ui-dialog-cnt">
+        <div class="ui-dialog-bd">
+            <h3>QR Information</h3>
+            <p id="cdkey" style="text-align: left">CD-KEY:</p>
+            <p id="information" style="text-align: left">Information:</p>
+        </div>
+        <div class="ui-dialog-ft">
+            <button id="back" type="button" data-role="button">返回</button>
+            <button id="ver" type="button" data-role="button">验证</button>
+        </div>
+    </div>
+</div>
+<div class="ui-dialog" id="dialog2">
+    <div class="ui-dialog-cnt">
+        <div class="ui-dialog-bd">
+            <h3>QR Information</h3>
+            <p id="result" style="text-align: left">Result:</p>
+        </div>
+        <div class="ui-dialog-ft">
+            <button id="ok" type="button" data-role="button">返回</button>
+        </div>
+    </div>
+</div>
+</section>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="demo">
+    <input id="btn_file" type="file" style="display:none" onchange="handleFiles(this.files)">
+    <button id="verify" class="ui-btn-lg-nowhole ui-btn-danger">验证</button>
+</div>
 <canvas id="qr-canvas" width="640" height="480"></canvas>
 </body>
 
