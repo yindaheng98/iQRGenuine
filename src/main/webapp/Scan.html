@@ -1,15 +1,13 @@
 <html>
 <head>
-    <title>QRCODE</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no, email=no">
     <meta name="HandheldFriendly" content="true">
-    <style type="text/css">
-    </style>
     <link rel="stylesheet" href="http://i.gtimg.cn/vipstyle/frozenui/2.0.0/css/frozen.css">
     <script type="text/javascript" src="js/lib/jsencrypt.js"></script>
-	<script type="text/javascript" src="js/lib/jsencrypt.min.js"></script>
+    <script type="text/javascript" src="js/lib/jsencrypt.min.js"></script>
     <script type="text/javascript" src="js/lib/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/lib/md5.min.js"></script>
     <script type="text/javascript" src="js/jsqrcode/grid.js"></script>
@@ -30,54 +28,115 @@
     <script type="text/javascript" src="js/jsqrcode/alignpat.js"></script>
     <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
     <script type="text/javascript" src="js/Scan/scan_init.js"></script>
-    <script type="text/javascript" src="js/Scan/scan_imghandle.js"></script>
+    <script type="text/javascript" src="js/Scan/scan_handleFiles.js"></script>
     <script type="text/javascript" src="js/Scan/scan_dathandle.js"></script>
-    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=37342703" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/Scan/scan_pagehandle.js"></script>
+    <title>iQRGenuine-扫码验证</title>
 </head>
-<script>
-$(document).ready(function(){
-    $("#verify").click(function () {
-        document.getElementById("btn_file").click();
-    });
-});
-</script>
-<body onload="load()">
-<p class="title" style="text-align: center;font-size:50px">QR Verify</p>
-<div class="ui-dialog" id="dialog1">
-    <div class="ui-dialog-cnt">
-        <div class="ui-dialog-bd">
-            <h3>QR Information</h3>
-            <p id="cdkey" style="text-align: left">CD-KEY:</p>
-            <p id="information" style="text-align: left">Information:</p>
+<body>
+<div style="max-width: 575px;margin:0 auto;background-color: #fff">
+    <div id="comp-main">
+        <p class="title" style="text-align: center;font-size:50px">
+            QR Verify
+        </p>
+        <div class="ui-dialog" id="dialog1">
+            <div class="ui-dialog-cnt">
+                <div class="ui-dialog-bd">
+                    <h3>扫描到以下信息</h3>
+                    <p id="cdkey" style="text-align: left">产品序列号：</p>
+                    <p id="information" style="text-align: left">产品信息：</p>
+                    <p style="text-align: left">验证只有一次机会，确认继续？</p>
+                </div>
+                <div class="ui-dialog-ft">
+                    <button id="ver" type="button" data-role="button">确认</button>
+                    <button id="back" type="button" data-role="button">取消</button>
+                </div>
+            </div>
         </div>
-        <div class="ui-dialog-ft">
-            <button id="back" type="button" data-role="button">返回</button>
-            <button id="ver" type="button" data-role="button">验证</button>
+        <div class="ui-dialog" id="dialog2">
+            <div class="ui-dialog-cnt">
+                <div class="ui-dialog-bd">
+                    <h3>QR Information</h3>
+                    <p id="result" style="text-align: left">Result:</p>
+                </div>
+                <div class="ui-dialog-ft">
+                    <button id="ok" type="button" data-role="button">返回</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="demo">
+            <input id="btn_file" type="file" style="display:none" onchange="handleFiles(this.files)">
+            <div class="ui-btn-wrap">
+                <button class="ui-btn-lg-nowhole ui-btn-primary" onclick="initCam()">
+                    拍照
+                </button>
+            </div>
+            <div class="ui-btn-wrap">
+                <button class="ui-btn-lg-nowhole ui-btn-primary" id="verify">
+                    从相册选择二维码
+                </button>
+            </div>
+
+            <canvas id="canvas" style="display: none"></canvas>
+            <video id="video" autoplay></video>
+
+        </div>
+    </div>
+    <div id="comp-yes" style="display: none">
+        <section class="ui-panel ui-panel-center ui-border-tb">
+            <h2 class="ui-arrowlink">
+                <span>验证结果</span>
+            </h2>
+        </section>
+        <div class="ui-feeds">
+            <ul>
+                <li style="text-align: center">
+                    <img src="img/duigou.svg">
+                </li>
+            </ul>
+        </div>
+        <div class="ui-whitespace" style="text-align: center">
+            <h2>在线验证通过，请比对您的产品信息：</h2>
+            <div id="info">yes</div>
+            <div class="ui-notice-btn">
+                <button class="ui-btn-primary ui-btn-lg" onclick="goBack()">返回</button>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+
+    <div id="comp-no" style="display: none">
+        <section class="ui-panel ui-panel-center ui-border-tb">
+            <h2 class="ui-arrowlink">
+                <span>验证结果</span>
+            </h2>
+        </section>
+        <div class="ui-feeds">
+            <ul>
+                <li style="text-align: center">
+                    <img src="img/tishishuoming.svg">
+                </li>
+            </ul>
+        </div>
+        <div class="ui-whitespace" style="text-align: center">
+            <h2>在线验证未通过，您可能购买了假冒伪劣产品，请联系销售商。</h2>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="ui-notice-btn">
+            <button class="ui-btn-primary ui-btn-lg" onclick="goBack()">返回</button>
         </div>
     </div>
 </div>
-<div class="ui-dialog" id="dialog2">
-    <div class="ui-dialog-cnt">
-        <div class="ui-dialog-bd">
-            <h3>QR Information</h3>
-            <p id="result" style="text-align: left">Result:</p>
-        </div>
-        <div class="ui-dialog-ft">
-            <button id="ok" type="button" data-role="button">返回</button>
-        </div>
-    </div>
-</div>
-</section>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="demo">
-    <input id="btn_file" type="file" style="display:none" onchange="handleFiles(this.files)">
-    <button id="verify" class="ui-btn-lg-nowhole ui-btn-danger">验证</button>
-</div>
-<canvas id="qr-canvas" width="640" height="480"></canvas>
 </body>
 </html>

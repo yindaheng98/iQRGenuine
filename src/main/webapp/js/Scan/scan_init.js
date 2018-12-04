@@ -1,41 +1,59 @@
-var gCtx = null;
-var gCanvas = null;
-var imageData = null;
+var video;
+var canvas;
 
-function initCanvas(w, h)//初始化拖动框
+$(document).ready(function ()
+                  {
+                      video = document.getElementById('video');
+                      canvas = document.getElementById('canvas');
+                      //设置解码后的回调函数，handleData(d)在scan_dathandle.js里面
+                      $("#verify").click(function ()
+                                         {
+                                             qrcode.callback = handleData;
+                                             document.getElementById("btn_file").click();
+                                         });
+                  });
+
+function initCam()//打开相机
 {
-    gCanvas = document.getElementById("qr-canvas");
-    gCanvas.addEventListener("dragenter", function (ev)
-    {
-        ev.stopPropagation();
-        ev.preventDefault();
-    }, false);
-    gCanvas.addEventListener("dragover", function (ev)
-    {
-        ev.stopPropagation();
-        ev.preventDefault();
-    }, false);
-    gCanvas.addEventListener("drop", function (ev)
-    {
-        ev.stopPropagation();
-        ev.preventDefault();
-        var dt = ev.dataTransfer;
-        var files = dt.files;
-        handleFiles(files);
-    }, false);
-    gCanvas.style.width = w + "px";
-    gCanvas.style.height = h + "px";
-    gCanvas.width = w;
-    gCanvas.height = h;
-    gCtx = gCanvas.getContext("2d");
-    gCtx.clearRect(0, 0, w, h);
-    imageData = gCtx.getImageData(0, 0, 320, 240);
+    var getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+    getUserMedia.call(navigator, {
+        video: true,
+        audio: false
+    }, function (localMediaStream)
+                      {
+                          video.src = window.URL.createObjectURL(localMediaStream);
+                          video.onloadedmetadata = function (e)
+                          {
+                              console.log('Error!', e);
+                              console.log("Label: " + localMediaStream.label);
+                              console.log("AudioTracks", localMediaStream.getAudioTracks());
+                              console.log("VideoTracks", localMediaStream.getVideoTracks());
+                          };
+                      }, function (e)
+                      {
+                          console.log('Rejected!', e);
+                      });
+    qrcode.callback = cam_handleData;
+    Screenshot();//开始扫描
 }
 
-function load()
+function Screenshot()
 {
-    initCanvas(640, 480);
-    qrcode.callback = handleData;
-    //解码后的回调函数，handleData(d)在scan_dathandle.js里面
+    var scale=Math.min(canvas.style.width/video.videoWidth,canvas.style.height/video.videoHeight);
+    canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth * scale, video.videoHeight * scale);
+    var imgData = canvas.toDataURL("image/png");
+    qrcode.decode(imgData);
 }
+
+function cam_handleData(data)
+{
+    if(data === "error decoding QR Code")
+        setTimeout(Screenshot(), 1000);
+    else handleData(data);
+}
+
 

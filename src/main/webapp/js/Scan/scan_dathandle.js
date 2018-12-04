@@ -1,8 +1,20 @@
-﻿function handleData(d)
+﻿function handleData(data)
 {
-	var d = JSON.parse(d)
+    var d=null;
+    try {
+        d=JSON.parse(data);
+    } catch(e) {
+        setTimeout(Screenshot(), 1000);
+        return;
+    }
+    if(d===undefined||d===null||
+        d[0]===undefined|| d[1]===undefined|| d[2]===undefined)
+    {
+        setTimeout(Screenshot(), 1000);
+        return;
+    }
     var cdkey = d[0];//获取CD-KEY
-    var platxt = d[1];
+    var platxt = d[1];//获取产品信息
     var secert=d[2];//获取密文
     $("#dialog1").addClass("show");
     $("#cdkey").append(cdkey);
@@ -17,7 +29,7 @@
             type: "POST",
             url: "search",
             data: data,
-            success: function (data, textStatus, jqXHR) {
+            success: function (data) {
                 var json = JSON.parse(data);
                 var private_key = json.public_key;//获取私钥
                  // Decrypt with the private key...
@@ -25,19 +37,11 @@
                 decrypt.setPrivateKey(private_key);
                 var uncrypted = decrypt.decrypt(secert);
                 // Now a simple check to see if the round-trip worked.
-                if (uncrypted == cdkey) {
-                    $("#dialog2").addClass("show");
-                    $("#result").text("Successful Authentication!");
-                    $("#ok").click(function(){
-                        location.reload(false);
-                    });
+                if (uncrypted === cdkey) {
+                    AuthSucceed(platxt);
                 }
                 else {
-                    $("#dialog2").addClass("show");
-                    $("#result").text("Failed Authentication!");
-                    $("#ok").click(function(){
-                        location.reload(false);
-                    });
+                    AuthFailed();
                 }
 
             },

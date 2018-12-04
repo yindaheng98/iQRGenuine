@@ -22,14 +22,17 @@
     <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
 </head>
 <body>
-<video id="video" width='400' height='400' autoplay></video>
+<video id="video" width='400' height='400' autoplay style="visibility: hidden"></video>
 <canvas id='canvas' width='400' height='400'></canvas>
 <button onclick="Screenshot()">拍照</button>
 </body>
 <script type="text/javascript">
     qrcode.callback=function (data)
     {
-        alert(data);
+        if(data==="error decoding QR Code")
+            setTimeout(Screenshot(),1000);
+        else
+            alert(data);
     };
     var canvas = document.getElementById('canvas');
     var getUserMedia =
