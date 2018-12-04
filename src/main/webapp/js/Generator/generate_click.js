@@ -1,20 +1,18 @@
-function create_qrcode(text, errorCorrectionLevel, mode, mb)
+function create_qrcode(text, errorCorrectionLevel, mb)
 {
     qrcode.stringToBytes = qrcode.stringToBytesFuncs[mb];
     //"0"表示自动判断要生成的QRCode的大小
     var qr = qrcode("0", errorCorrectionLevel || 'M');
-    qr.addData(text, mode);
+    qr.addData(text, 'Byte');
     qr.make();
     return qr.createImgTag();
 }
 
 function update_qrcode(text)
 {
-    var form = document.forms['qrForm'];
-    var e = form.elements['e'].value;
-    var m = form.elements['m'].value;
-    var mb = form.elements['mb'].value;
-    document.getElementById('qr').innerHTML = create_qrcode(text, e, m, mb);
+    var e = $('input[name="e"]:checked').val();
+    var mb = $('input[name="mb"]:checked').val();
+    document.getElementById('qr').innerHTML = create_qrcode(text, e, mb);
 }
 
 function generate_click()

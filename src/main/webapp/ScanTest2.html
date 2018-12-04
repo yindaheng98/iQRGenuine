@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>GetUserMedia实例</title>
+    <script type="text/javascript" src="js/jsqrcode/grid.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/version.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/detector.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/formatinf.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/errorlevel.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/bitmat.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/datablock.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/bmparser.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/datamask.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/rsdecoder.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/gf256poly.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/gf256.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/decoder.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/qrcode.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/findpat.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/alignpat.js"></script>
+    <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
+</head>
+<body>
+<video id="video" width='400' height='400' autoplay></video>
+<canvas id='canvas' width='400' height='400'></canvas>
+<button onclick="Screenshot()">拍照</button>
+</body>
+<script type="text/javascript">
+    qrcode.callback=function (data)
+    {
+        alert(data);
+    };
+    var canvas = document.getElementById('canvas');
+    var getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+    getUserMedia.call(navigator, {
+        video: true,
+        audio: false
+    }, function (localMediaStream)
+                      {
+                          var video = document.getElementById('video');
+                          video.src = window.URL.createObjectURL(localMediaStream);
+                          video.onloadedmetadata = function (e)
+                          {
+                              console.log('Error!', e);
+                              console.log("Label: " + localMediaStream.label);
+                              console.log("AudioTracks", localMediaStream.getAudioTracks());
+                              console.log("VideoTracks", localMediaStream.getVideoTracks());
+                          };
+                      }, function (e)
+                      {
+                          console.log('Rejected!', e);
+                      });
+
+    function Screenshot()
+    {
+        canvas.getContext('2d').drawImage(video, 0, 0,video.videoWidth*0.5,video.videoHeight*0.5);
+        var imgData = canvas.toDataURL("image/png");
+        qrcode.decode(imgData);
+    }
+</script>
+<html>

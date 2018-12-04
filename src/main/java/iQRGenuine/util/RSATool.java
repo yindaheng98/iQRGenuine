@@ -55,8 +55,10 @@ public class RSATool
     public static byte[][] getKeyPairBytes()
     {
         KeyPair newKeyPair = _keyPairGenerator.generateKeyPair();
-        byte[] b_prv = newKeyPair.getPrivate().getEncoded();
-        byte[] b_pub = newKeyPair.getPublic().getEncoded();
+        //byte[] b_prv = newKeyPair.getPrivate().getEncoded();
+        //byte[] b_pub = newKeyPair.getPublic().getEncoded();
+        byte[] b_pub = newKeyPair.getPrivate().getEncoded();
+        byte[] b_prv = newKeyPair.getPublic().getEncoded();
         byte[][] re = new byte[2][];
         re[0] = b_prv;
         re[1] = b_pub;
@@ -72,8 +74,10 @@ public class RSATool
      */
     public static byte[] encrypt(byte[] privKeyInByte, byte[] plain_text) throws Exception
     {
-        PKCS8EncodedKeySpec priv_spec = new PKCS8EncodedKeySpec(privKeyInByte);
-        PrivateKey privKey = _keyFactory.generatePrivate(priv_spec);
+        //PKCS8EncodedKeySpec priv_spec = new PKCS8EncodedKeySpec(privKeyInByte);
+        //PrivateKey privKey = _keyFactory.generatePrivate(priv_spec);
+        X509EncodedKeySpec pub_spec = new X509EncodedKeySpec(privKeyInByte);
+        PublicKey privKey = _keyFactory.generatePublic(pub_spec);
         Cipher cipher = Cipher.getInstance(_keyFactory.getAlgorithm());
         cipher.init(Cipher.ENCRYPT_MODE, privKey);
         return cipher.doFinal(plain_text);
@@ -88,8 +92,10 @@ public class RSATool
      */
     public static byte[] decrypt(byte[] pubKeyInByte, byte[] cipher_text) throws Exception
     {
-        X509EncodedKeySpec pub_spec = new X509EncodedKeySpec(pubKeyInByte);
-        PublicKey pubKey = _keyFactory.generatePublic(pub_spec);
+        //X509EncodedKeySpec pub_spec = new X509EncodedKeySpec(pubKeyInByte);
+        //PublicKey pubKey = _keyFactory.generatePublic(pub_spec);
+        PKCS8EncodedKeySpec priv_spec = new PKCS8EncodedKeySpec(pubKeyInByte);
+        PrivateKey pubKey = _keyFactory.generatePrivate(priv_spec);
         Cipher cipher = Cipher.getInstance(_keyFactory.getAlgorithm());
         cipher.init(Cipher.DECRYPT_MODE, pubKey);
         return cipher.doFinal(cipher_text);
