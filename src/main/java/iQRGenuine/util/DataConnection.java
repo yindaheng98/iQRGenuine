@@ -81,6 +81,60 @@ public class DataConnection
      * @return 公钥
      * @throws SQLException 查询失败
      */
+    public String findInfo(String cd_key, String md5_info) throws Exception
+    {
+        String public_key = redis_findInfo(cd_key, md5_info);//先在redis里面找
+        if (public_key != null)
+            return public_key;//找到就返回
+        ResultSet rs = stmt.executeQuery(DataTool.selectStatement(cd_key, md5_info));
+        if (!rs.next()) throw new Exception("查无此产品");
+        public_key = rs.getString(DataTool.colname_public_key);
+        return public_key;
+    }
+
+    private String redis_findInfo(String cd_key, String md5_info) throws Exception
+    {
+        if (!redis_avail) return null;
+        if (!jedis.exists(cd_key))
+            return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
+        String[] infos = jedis.get(cd_key).split(" ");
+        if (infos[0].equals("1") || !infos[0].equals(md5_info))
+            throw new Exception("查无此产品");//序列号存在但是已经查过或者信息对不上直接报错退出
+        return infos[1];
+    }
+
+    /**
+     * 输入防伪验证信息更新验证状态
+     *
+     * @param cd_key   产品序列号
+     * @param md5_info 产品信息的MD5码
+     */
+    public void updateInfo(String cd_key, String md5_info)
+    {
+        try
+        {
+            stmt.execute(DataTool.verifyStatement(cd_key, md5_info));
+            if (redis_avail)
+            {
+                String[] infos = jedis.get(cd_key).split(" ");
+                if (!infos[0].equals("1") && infos[0].equals(md5_info))
+                    jedis.set(cd_key, "1");//查过的序列号直接记成1
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 输入防伪验证信息获取公钥并且修改数据库
+     *
+     * @param cd_key   产品序列号
+     * @param md5_info 产品信息的MD5码
+     * @return 公钥
+     * @throws SQLException 查询失败
+     */
     public String verifyInfo(String cd_key, String md5_info) throws Exception
     {
         String public_key = redis_verifyInfo(cd_key, md5_info);//先在redis里面找
