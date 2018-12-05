@@ -64,11 +64,7 @@
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+        <br><br><br><br><br>
         <div class="demo">
             <input id="btn_file" type="file" style="display:none" onchange="handleFiles(this.files)">
             <div class="ui-btn-wrap">
@@ -81,11 +77,18 @@
                     从相册选择二维码
                 </button>
             </div>
-
-            <canvas id="canvas" style="display: none"></canvas>
-            <video id="video" autoplay></video>
-
         </div>
+        <br><br><br><br>
+    </div>
+    <div id="comp-camera" style="display: none;">
+        <section class="ui-panel ui-panel-center ui-border-tb">
+            <h2 class="ui-arrowlink">
+                <span>请对准防伪二维码</span>
+                <span class="ui-panel-title-tips" onclick="goBack()">返回</span>
+            </h2>
+        </section>
+        <canvas id="canvas" style="display: none"></canvas>
+        <video id="video" autoplay style="width:100%; height:100%; object-fit: contain"></video>
     </div>
     <div id="comp-yes" style="display: none">
         <section class="ui-panel ui-panel-center ui-border-tb">
@@ -106,10 +109,7 @@
             <div class="ui-notice-btn">
                 <button class="ui-btn-primary ui-btn-lg" onclick="goBack()">返回</button>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
+            <br><br><br><br>
         </div>
     </div>
 
@@ -128,10 +128,7 @@
         </div>
         <div class="ui-whitespace" style="text-align: center">
             <h2>在线验证未通过，您可能购买了假冒伪劣产品，请联系销售商。</h2>
-            <br>
-            <br>
-            <br>
-            <br>
+            <br><br><br><br>
         </div>
         <div class="ui-notice-btn">
             <button class="ui-btn-primary ui-btn-lg" onclick="goBack()">返回</button>

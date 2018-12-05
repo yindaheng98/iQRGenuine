@@ -1,14 +1,17 @@
 function goBack()
 {
+    $("#comp-camera").hide();
     $("#dialog1").hide();
     $("#dialog2").hide();
     $("#comp-yes").hide();
     $("#comp-no").hide();
     $("#comp-main").show();
+    location.reload(false);
 }
 
 function AuthFailed()
 {
+    $("#comp-camera").hide();
     $("#dialog1").hide();
     $("#dialog2").hide();
     $("#comp-yes").hide();
@@ -18,6 +21,7 @@ function AuthFailed()
 
 function AuthSucceed(info)
 {
+    $("#comp-camera").hide();
     $("#dialog1").hide();
     $("#dialog2").hide();
     $("#comp-yes").show();

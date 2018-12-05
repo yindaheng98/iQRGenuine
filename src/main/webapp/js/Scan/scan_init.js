@@ -1,5 +1,6 @@
 var video;
 var canvas;
+var run_cam=false;
 
 $(document).ready(function ()
                   {
@@ -8,6 +9,7 @@ $(document).ready(function ()
                       //设置解码后的回调函数，handleData(d)在scan_dathandle.js里面
                       $("#verify").click(function ()
                                          {
+                                             run_cam=false;
                                              qrcode.callback = handleData;
                                              document.getElementById("btn_file").click();
                                          });
@@ -15,6 +17,7 @@ $(document).ready(function ()
 
 function initCam()//打开相机
 {
+    run_cam=true;
     var getUserMedia =
         navigator.getUserMedia ||
         navigator.webkitGetUserMedia ||
@@ -38,6 +41,8 @@ function initCam()//打开相机
                           console.log('Rejected!', e);
                       });
     qrcode.callback = cam_handleData;
+    $("#comp-main").hide();
+    $("#comp-camera").show();
     Screenshot();//开始扫描
 }
 

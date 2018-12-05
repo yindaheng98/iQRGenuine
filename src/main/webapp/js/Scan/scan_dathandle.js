@@ -4,7 +4,7 @@
     try {
         d=JSON.parse(data);
     } catch(e) {
-        setTimeout(Screenshot(), 1000);
+        if(run_cam) setTimeout(Screenshot(), 1000);
         return;
     }
     if(d===undefined||d===null||
