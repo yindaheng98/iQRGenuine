@@ -6,11 +6,11 @@ $(document).ready(function ()
                   {
                       video = document.getElementById('video');
                       canvas = document.getElementById('canvas');
+                      qrcode.callback = handleData;
                       //设置解码后的回调函数，handleData(d)在scan_dathandle.js里面
                       $("#verify").click(function ()
                                          {
                                              run_cam=false;
-                                             qrcode.callback = handleData;
                                              document.getElementById("btn_file").click();
                                          });
                   });
@@ -40,7 +40,6 @@ function initCam()//打开相机
                       {
                           console.log('Rejected!', e);
                       });
-    qrcode.callback = cam_handleData;
     $("#comp-main").hide();
     $("#comp-camera").show();
     Screenshot();//开始扫描
@@ -48,17 +47,10 @@ function initCam()//打开相机
 
 function Screenshot()
 {
-    var scale=Math.min(canvas.style.width/video.videoWidth,canvas.style.height/video.videoHeight);
+    var scale=Math.min(canvas.width/video.videoWidth,canvas.height/video.videoHeight);
     canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth * scale, video.videoHeight * scale);
     var imgData = canvas.toDataURL("image/png");
     qrcode.decode(imgData);
-}
-
-function cam_handleData(data)
-{
-    if(data === "error decoding QR Code")
-        setTimeout(Screenshot(), 1000);
-    else handleData(data);
 }
 
 

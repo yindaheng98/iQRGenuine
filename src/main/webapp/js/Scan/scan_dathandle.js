@@ -13,6 +13,8 @@
         setTimeout(Screenshot(), 1000);
         return;
     }
+    $("#comp-camera").hide();
+    $("#comp-main").show();
     var cdkey = d[0];//获取CD-KEY
     var platxt = d[1];//获取产品信息
     var secert=d[2];//获取密文
