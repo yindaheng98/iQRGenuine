@@ -1,6 +1,8 @@
 package iQRGenuine.util;
 
-import redis.clients.jedis.Jedis;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,18 +11,34 @@ import java.sql.Statement;
 public class DataConnection
 {
     private Statement stmt;
-    private Jedis jedis;
-    private boolean redis_avail = false;//此变量代表redis数据库的可用性
+
+    private static boolean lettuce_avail;
+    private static RedisCommands<String, String> syncCommands;
+
+    static
+    {
+        try
+        {
+            RedisClient redisClient = RedisClient.create("redis://localhost:6379/");
+            StatefulRedisConnection<String, String> connection = redisClient.connect();
+            syncCommands = connection.sync();
+            lettuce_avail = true;
+        }
+        catch (Exception ex)
+        {
+            lettuce_avail = false;
+            ex.printStackTrace();
+        }
+    }
+
 
     public DataConnection() throws Exception
     {
         stmt = DataTool.initConn();
         try
         {
-            jedis = new Jedis("localhost");
-            if (jedis.ping().equals("PONG"))
-                redis_avail = true;//如果成功连上了redis可用性就为true
-            redis_init();
+            if (lettuce_avail)
+                redis_init();
         }
         catch (Exception e)
         {
@@ -28,7 +46,7 @@ public class DataConnection
         }
     }
 
-    private void redis_init() throws SQLException
+    private void redis_init() throws Exception
     {
         ResultSet rs = stmt.executeQuery(DataTool.initStatement(500));
         while (rs.next())
@@ -39,11 +57,11 @@ public class DataConnection
             {
                 String md5_info = rs.getString(DataTool.colname_md5_info);
                 String public_key = rs.getString(DataTool.colname_public_key);
-                jedis.set(cd_key, md5_info + " " + public_key + " " + "0");
+                syncCommands.set(cd_key, md5_info + " " + public_key + " " + "0");
                 //就写入全部信息
             }
             else
-                jedis.set(cd_key, "1");//如果是已确认的信息就直接写1
+                syncCommands.set(cd_key, "1");
         }
     }
 
@@ -69,8 +87,8 @@ public class DataConnection
 
     private void redis_insertInfo(String cd_key, String md5_info, String public_key)
     {
-        if (!redis_avail) return;
-        jedis.set(cd_key, md5_info + " " + public_key + " " + "0");
+        if (!lettuce_avail) return;
+        syncCommands.set(cd_key, md5_info + " " + public_key + " " + "0");
     }
 
     /**
@@ -94,10 +112,10 @@ public class DataConnection
 
     private String redis_findInfo(String cd_key, String md5_info) throws Exception
     {
-        if (!redis_avail) return null;
-        if (!jedis.exists(cd_key))
+        if (!lettuce_avail) return null;
+        if (syncCommands.exists(cd_key) < 1)
             return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
-        String[] infos = jedis.get(cd_key).split(" ");
+        String[] infos = syncCommands.get(cd_key).split(" ");
         if (infos[0].equals("1") || !infos[0].equals(md5_info))
             throw new Exception("查无此产品");//序列号存在但是已经查过或者信息对不上直接报错退出
         return infos[1];
@@ -114,11 +132,11 @@ public class DataConnection
         try
         {
             stmt.execute(DataTool.verifyStatement(cd_key, md5_info));
-            if (redis_avail)
+            if (lettuce_avail)
             {
-                String[] infos = jedis.get(cd_key).split(" ");
+                String[] infos = syncCommands.get(cd_key).split(" ");
                 if (!infos[0].equals("1") && infos[0].equals(md5_info))
-                    jedis.set(cd_key, "1");//查过的序列号直接记成1
+                    syncCommands.set(cd_key, "1");//查过的序列号直接记成1
             }
         }
         catch (Exception ex)
@@ -152,13 +170,13 @@ public class DataConnection
 
     private String redis_verifyInfo(String cd_key, String md5_info) throws Exception
     {
-        if (!redis_avail) return null;
-        if (!jedis.exists(cd_key))
+        if (!lettuce_avail) return null;
+        if (syncCommands.exists(cd_key) < 1)
             return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
-        String[] infos = jedis.get(cd_key).split(" ");
+        String[] infos = syncCommands.get(cd_key).split(" ");
         if (infos[0].equals("1") || !infos[0].equals(md5_info))
             throw new Exception("查无此产品");//序列号存在但是已经查过或者信息对不上直接报错退出
-        jedis.set(cd_key, "1");//查过的序列号直接记成1
+        syncCommands.set(cd_key, "1");//查过的序列号直接记成1
         return infos[1];
     }
 
