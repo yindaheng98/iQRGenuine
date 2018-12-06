@@ -45,7 +45,7 @@
     <meta name="viewport"
           content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
     <!-- 引入 FrozenUI -->
-    <link rel="stylesheet" href="http://i.gtimg.cn/vipstyle/frozenui/2.0.0/css/frozen.css"/>
+    <link rel="stylesheet" href="https://i.gtimg.cn/vipstyle/frozenui/2.0.0/css/frozen.css"/>
     <title>iQRGenuine-Generator</title>
     <script src="js/lib/md5.min.js"></script>
     <script src="js/lib/jquery-3.3.1.min.js"></script>
