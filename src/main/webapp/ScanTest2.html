@@ -22,46 +22,75 @@
     <script type="text/javascript" src="js/jsqrcode/databr.js"></script>
 </head>
 <body>
-<video id="video" width='400' height='400' autoplay style="visibility: hidden"></video>
+<video id="video" width='400' height='400' autoplay></video>
 <canvas id='canvas' width='400' height='400'></canvas>
 <button onclick="Screenshot()">拍照</button>
+<button onclick="switch_cam()">切换</button>
 </body>
 <script type="text/javascript">
-    qrcode.callback=function (data)
+    var video = document.getElementById('video');
+    qrcode.callback = function (data)
     {
-        if(data==="error decoding QR Code")
-            setTimeout(Screenshot(),1000);
+        if(data === "error decoding QR Code")
+            setTimeout(Screenshot(), 1000);
         else
             alert(data);
     };
     var canvas = document.getElementById('canvas');
-    var getUserMedia =
-        navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia;
-    getUserMedia.call(navigator, {
-        video: true,
-        audio: false
-    }, function (localMediaStream)
-                      {
-                          var video = document.getElementById('video');
-                          video.src = window.URL.createObjectURL(localMediaStream);
-                          video.onloadedmetadata = function (e)
-                          {
-                              console.log('Error!', e);
-                              console.log("Label: " + localMediaStream.label);
-                              console.log("AudioTracks", localMediaStream.getAudioTracks());
-                              console.log("VideoTracks", localMediaStream.getVideoTracks());
-                          };
-                      }, function (e)
-                      {
-                          console.log('Rejected!', e);
-                      });
+
+    if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices)
+    {
+        console.log("enumerateDevices() not supported.");
+    }
+
+    var camera_ids = [];
+    var cam_num = 0;
+    navigator.mediaDevices.enumerateDevices()
+        .then(function (devices)
+              {
+                  devices.forEach(function (device)
+                                  {
+                                      if(device.kind.indexOf("video") !== -1)
+                                          camera_ids.push(device.deviceId);
+                                  });
+                  switch_cam();
+              })
+        .catch(function (err)
+               {
+                   navigator.mediaDevices.getUserMedia(
+                       {
+                           audio: false,
+                           video: true
+                       }).then(stream_func).catch(function (err)
+                                                  {
+                                                      alert("不支持摄像头");
+                                                  });
+               });
+
+
+    function stream_func(stream)
+    {
+        video.src = window.URL.createObjectURL(stream);
+        video.play();
+    }
+
+    function switch_cam()
+    {
+        cam_num = (cam_num + 1) % camera_ids.length;
+        navigator.mediaDevices.getUserMedia({
+                                                audio: false,
+                                                video: {deviceId: {exact: camera_ids[cam_num]}}
+                                            }).then(stream_func).catch(function (err)
+                                                                       {
+                                                                           alert("不支持此摄像头");
+                                                                       });
+        alert("use camera" + cam_num + ":" + camera_ids[cam_num]);
+
+    }
 
     function Screenshot()
     {
-        canvas.getContext('2d').drawImage(video, 0, 0,video.videoWidth*0.5,video.videoHeight*0.5);
+        canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth * 0.5, video.videoHeight * 0.5);
         var imgData = canvas.toDataURL("image/png");
         qrcode.decode(imgData);
     }

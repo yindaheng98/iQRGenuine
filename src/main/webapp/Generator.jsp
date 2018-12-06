@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="iQRGenuine.util.DataConnection" %>
 <%
     String error_resp = "<script>" +
@@ -59,11 +59,10 @@
         <section class="ui-panel ui-panel-center ui-border-tb">
             <h2 class="ui-arrowlink"><span>产品信息</span></h2>
         </section>
-        <div class="ui-form-item ui-form-item-pure ui-border-b" style="height: 150px;">
-            <textarea name="info" id="info" placeholder="Input some information here."
-                      style="height: 98%;width: 99%;">
-                Input some information here.
-            </textarea>
+        <div class="ui-list-text border-list" style="height: 150px;">
+            <textarea class="ui-border-t" name="info" id="info"
+                      placeholder="Input some information here."
+                      style="height: 98%;width: 99%;margin: 0 auto">Input some information here.</textarea>
         </div>
 
         <section class="ui-panel ui-panel-center ui-border-tb">

@@ -31,6 +31,13 @@
     <script type="text/javascript" src="js/Scan/scan_handleFiles.js"></script>
     <script type="text/javascript" src="js/Scan2/scan_dathandle.js"></script>
     <script type="text/javascript" src="js/Scan/scan_pagehandle.js"></script>
+    <style>
+        .icon-alert
+        {
+            width: 65% !important;
+            margin: 0 auto;
+        }
+    </style>
     <title>iQRGenuine-扫码验证</title>
 </head>
 <body>
@@ -57,7 +64,7 @@
             <div class="ui-dialog-cnt">
                 <div class="ui-dialog-bd">
                     <h3>QR Information</h3>
-                    <p id="result" style="text-align: left">Result:</p>
+                    <p id="result" style="text-align: left">Error:</p>
                 </div>
                 <div class="ui-dialog-ft">
                     <button id="ok" type="button" data-role="button">返回</button>
@@ -80,6 +87,7 @@
         </div>
         <br><br><br><br>
     </div>
+
     <div id="comp-camera" style="display: none;">
         <section class="ui-panel ui-panel-center ui-border-tb">
             <h2 class="ui-arrowlink">
@@ -89,7 +97,18 @@
         </section>
         <canvas id="canvas" width="400" height="400" style="display: none;"></canvas>
         <video id="video" autoplay style="width:100%; height:100%; object-fit: contain"></video>
+        <br>
+        <div class="ui-feeds">
+            <ul>
+                <li>
+                    <img src="img/shexiangtou.svg" onclick="switch_cam()"
+                         style="width: 20%;margin: 0 auto">
+                </li>
+            </ul>
+        </div>
+        <br>
     </div>
+
     <div id="comp-yes" style="display: none">
         <section class="ui-panel ui-panel-center ui-border-tb">
             <h2 class="ui-arrowlink">
@@ -98,12 +117,13 @@
         </section>
         <div class="ui-feeds">
             <ul>
-                <li style="text-align: center">
-                    <img src="img/duigou.svg">
+                <li>
+                    <img src="img/duigou.svg" class="icon-alert">
                 </li>
             </ul>
         </div>
         <div class="ui-whitespace" style="text-align: center">
+            <br><br><br>
             <h2>在线验证通过，请比对您的产品信息：</h2>
             <div id="info">yes</div>
             <div class="ui-notice-btn">
@@ -121,12 +141,13 @@
         </section>
         <div class="ui-feeds">
             <ul>
-                <li style="text-align: center">
-                    <img src="img/tishishuoming.svg">
+                <li>
+                    <img src="img/tishishuoming.svg" class="icon-alert">
                 </li>
             </ul>
         </div>
         <div class="ui-whitespace" style="text-align: center">
+            <br><br><br>
             <h2>在线验证未通过，您可能购买了假冒伪劣产品，请联系销售商。</h2>
             <br><br><br><br>
         </div>
