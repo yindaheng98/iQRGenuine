@@ -72,7 +72,7 @@ function stream_func(stream)
                {
                    run_cam = true;
                    Screenshot()
-               }, 300);//等之前的Screenshot()完全停了再开
+               }, 30);//等之前的Screenshot()完全停了再开
 }
 
 function switch_cam()//切换摄像头
