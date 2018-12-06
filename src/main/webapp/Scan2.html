@@ -95,13 +95,16 @@
                 <span class="ui-panel-title-tips" onclick="goBack()">返回</span>
             </h2>
         </section>
-        <canvas id="canvas" width="400" height="400" style="display: none;"></canvas>
-        <video id="video" autoplay style="width:100%; height:100%; object-fit: contain"></video>
+        <div style="width: 50%;height: auto;margin: 0 auto;">
+            <canvas id="canvas" width="400" height="400" style="width: 100%;height: auto"></canvas>
+        </div>
         <br>
+        <video id="video" autoplay style="width:100%; height:auto; object-fit: contain"></video>
+        <br><br>
         <div class="ui-feeds">
             <ul>
                 <li>
-                    <img src="img/shexiangtou.svg" onclick="switch_cam()"
+                    <img src="img/shexiangtou.svg" onclick="switch_cam()" id="cam-icon"
                          style="width: 20%;margin: 0 auto">
                 </li>
             </ul>
@@ -129,7 +132,6 @@
             <div class="ui-notice-btn">
                 <button class="ui-btn-primary ui-btn-lg" onclick="goBack()">返回</button>
             </div>
-            <br><br><br><br>
         </div>
     </div>
 
