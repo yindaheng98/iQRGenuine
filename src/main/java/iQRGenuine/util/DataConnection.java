@@ -12,16 +12,17 @@ public class DataConnection
 {
     private Statement stmt;
 
-    private static boolean lettuce_avail;
-    private static RedisCommands<String, String> syncCommands;
+    private boolean lettuce_avail;
+    private RedisCommands<String, String> syncCommands;
 
-    static
+    private void redisConnect()
     {
         try
         {
-            RedisClient redisClient = RedisClient.create("redis://localhost:6379/");
+            RedisClient redisClient = RedisClient.create("redis://redis:6379/");
             StatefulRedisConnection<String, String> connection = redisClient.connect();
             syncCommands = connection.sync();
+            if(!lettuce_avail)redis_init();
             lettuce_avail = true;
         }
         catch (Exception ex)
@@ -31,23 +32,9 @@ public class DataConnection
         }
     }
 
-
-    public DataConnection() throws Exception
-    {
-        stmt = DataTool.initConn();
-        try
-        {
-            if (lettuce_avail)
-                redis_init();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     private void redis_init() throws Exception
     {
+        stmt = DataTool.initConn();
         ResultSet rs = stmt.executeQuery(DataTool.initStatement(500));
         while (rs.next())
         {
@@ -73,8 +60,9 @@ public class DataConnection
      * @return 插入后auto_increment来的主键值
      * @throws SQLException SQL查询出错
      */
-    public String insertInfo(String md5_info, String public_key) throws SQLException
+    public String insertInfo(String md5_info, String public_key) throws Exception
     {
+        stmt = DataTool.initConn();
         stmt.execute(DataTool.insertStatement(md5_info, public_key),
                 Statement.RETURN_GENERATED_KEYS);
         ResultSet rs = stmt.getGeneratedKeys();
@@ -87,6 +75,7 @@ public class DataConnection
 
     private void redis_insertInfo(String cd_key, String md5_info, String public_key)
     {
+        redisConnect();
         if (!lettuce_avail) return;
         syncCommands.set(cd_key, md5_info + " " + public_key + " " + "0");
     }
@@ -101,6 +90,7 @@ public class DataConnection
      */
     public String findInfo(String cd_key, String md5_info) throws Exception
     {
+        stmt = DataTool.initConn();
         String public_key = redis_findInfo(cd_key, md5_info);//先在redis里面找
         if (public_key != null)
             return public_key;//找到就返回
@@ -112,6 +102,7 @@ public class DataConnection
 
     private String redis_findInfo(String cd_key, String md5_info) throws Exception
     {
+        redisConnect();
         if (!lettuce_avail) return null;
         if (syncCommands.exists(cd_key) < 1)
             return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
@@ -131,7 +122,9 @@ public class DataConnection
     {
         try
         {
+            stmt = DataTool.initConn();
             stmt.execute(DataTool.verifyStatement(cd_key, md5_info));
+            redisConnect();
             if (lettuce_avail)
             {
                 String[] infos = syncCommands.get(cd_key).split(" ");
@@ -155,6 +148,7 @@ public class DataConnection
      */
     public String verifyInfo(String cd_key, String md5_info) throws Exception
     {
+        stmt = DataTool.initConn();
         String public_key = redis_verifyInfo(cd_key, md5_info);//先在redis里面找
         if (public_key != null)
         {
@@ -170,6 +164,7 @@ public class DataConnection
 
     private String redis_verifyInfo(String cd_key, String md5_info) throws Exception
     {
+        redisConnect();
         if (!lettuce_avail) return null;
         if (syncCommands.exists(cd_key) < 1)
             return null;//序列号不存在，可能是没写进redis，返回null继续搜mysql数据库
@@ -188,8 +183,9 @@ public class DataConnection
      * @return 验证是否成功
      * @throws SQLException 查询失败
      */
-    public boolean loginPass(String username, String password) throws SQLException
+    public boolean loginPass(String username, String password) throws Exception
     {
+        stmt = DataTool.initConn();
         ResultSet rs = stmt.executeQuery(DataTool.loginStatement(username, password));
         return rs.next();
     }

@@ -1,11 +1,12 @@
 package iQRGenuine.util;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class DataTool
 {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/iqrgenuine?useUnicode=true&characterEncoding=utf8";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/iqrgenuine?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8";
     private static final String USER = "iqrgenuine";
     private static final String PASS = "iqrgenuine";
 
@@ -19,10 +20,14 @@ public class DataTool
     private static final String colname_username = "username";
     private static final String colname_md5_password = "md5_password";
 
+    private static Connection connection = null;
+
     static Statement initConn() throws Exception
     {
-        Class.forName("com.mysql.jdbc.Driver");
-        return DriverManager.getConnection(DB_URL, USER, PASS).createStatement();
+        if(connection!=null)connection.close();
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        connection = DriverManager.getConnection(DB_URL, USER, PASS);
+        return connection.createStatement();
     }
 
     public static String initStatement(int n)

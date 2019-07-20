@@ -36,9 +36,7 @@ public class Generate extends HttpServlet
         }
         catch (Exception ex)
         {
-            // handle any errors
-            System.out.println("init() failed");
-            System.out.println("Exception: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -75,6 +73,8 @@ public class Generate extends HttpServlet
                     "null"));
             return;
         }//数据验证
+        if(dataConn==null)
+            init();
         try
         {
             if (!dataConn.loginPass(username, password))
