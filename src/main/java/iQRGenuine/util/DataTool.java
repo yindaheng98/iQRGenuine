@@ -6,7 +6,7 @@ import java.sql.Statement;
 
 public class DataTool
 {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/iqrgenuine?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8";
+    private static final String DB_URL = "jdbc:mysql://mysql:3306/iqrgenuine?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8";
     private static final String USER = "iqrgenuine";
     private static final String PASS = "iqrgenuine";
 
