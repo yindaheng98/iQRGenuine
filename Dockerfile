@@ -1,7 +1,7 @@
 FROM gradle:jdk8
 COPY ./ /app
 WORKDIR /app
-RUN ./gradlew wa
+RUN chmod +x ./gradlew && ./gradlew war
 
 FROM jetty:9-jre8-alpine
 
