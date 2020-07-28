@@ -1,4 +1,5 @@
-create database iqrgenuine;
+drop database if exists iqrgenuine;
+create database iqrgenuine DEFAULT CHARACTER SET utf8;
 use iqrgenuine;
 create table public_keys
 (
@@ -16,3 +17,6 @@ md5_password varchar(255),
 primary key(username)
 );
 insert into user_infos(username,md5_password)values('iqrgenuine',md5('iqrgenuine'));
+create user 'iqrgenuine'@'%' identified by 'iqrgenuine';
+grant select,update,insert on iqrgenuine.* to 'iqrgenuine'@'%';
+flush privileges;

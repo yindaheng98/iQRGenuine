@@ -1,0 +1,21 @@
+version: "3"
+services: 
+  mysql:
+    image: mysql
+    ports: 
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes: 
+      - ./create_insert.sql:/docker-entrypoint-initdb.d/create_insert.sql
+  redis:
+    image: redis
+    ports: 
+      - "6379:6379"
+  app:
+    build: ./
+    ports: 
+      - "80:8080"
+
+
